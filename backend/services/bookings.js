@@ -25,8 +25,8 @@ export const checkExistBooking = (userId, eventId) => {
 
 export const getAllUserBookingServices = (userId) => {
 	return handlePrismaQuery(async () => {
-		const cachedBookings = await redisClient.get(redisKey(userId));
-		if (cachedBookings) return JSON.parse(cachedBookings);
+		// const cachedBookings = await redisClient.get(redisKey(userId));
+		// if (cachedBookings) return JSON.parse(cachedBookings);
 
 		const bookings = await prisma.Booking.findMany({
 			where: { userId },

@@ -16,15 +16,16 @@ import { checkCurrentUser } from "../middlewares/authMW.js";
 
 const router = express.Router();
 
-router.get("/login", (req, res) => res.render("login"));
-
 router.post("/api/login", validateSchema(loginSchema), loginPost);
-
-router.get("/signup", (req, res) => res.render("signup"));
 
 router.post("/api/signup", validateSchema(signupSchema), signupPost);
 
-router.get("/logout", checkCurrentUser, logoutGet);
+router.get("/api/me", checkCurrentUser, (req, res) => {
+	const user = res.locals.user;
+	return res.json({ user: user || null });
+});
+
+router.get("/api/logout", checkCurrentUser, logoutGet);
 
 // Google OAuth
 router.get("/auth/google", googleOAuthController);

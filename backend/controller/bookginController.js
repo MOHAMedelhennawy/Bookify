@@ -33,7 +33,7 @@ export const getAllUserBookingController = catchAsync(async (req, res) => {
 
 export const addNewBookingController = catchAsync(async (req, res) => {
 	const user = res.locals.user;
-	const { eventId } = req.body;
+	const { eventId } = req.params;
 
 	if (!user || !user.id) {
 		throw new AppError(
@@ -73,10 +73,11 @@ export const addNewBookingController = catchAsync(async (req, res) => {
 });
 
 export const deleteBookingController = catchAsync(async (req, res) => {
-	const { userId, eventId } = req.body;
+	const user = res.locals.user;
+	const { eventId } = req.params;
 
 	// check if user ID and event ID is passed
-	if (!userId) {
+	if (!user.id) {
 		throw new AppError(
 			"User ID is missing",
 			400,
@@ -94,7 +95,7 @@ export const deleteBookingController = catchAsync(async (req, res) => {
 		);
 	}
 
-	await deleteBookingService(userId, eventId);
+	await deleteBookingService(user.id, eventId);
 
 	res.status(202).json({
 		message: "Bookgin deleted successfully.",

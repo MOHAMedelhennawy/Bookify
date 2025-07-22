@@ -12,6 +12,7 @@ import AppError from "../utils/AppError.js";
 export const signupPost = catchAsync(async (req, res) => {
 	const { name, email, password } = req.body;
 
+
 	// Save user on the database
 	const user = await signupUser(name, email, password);
 

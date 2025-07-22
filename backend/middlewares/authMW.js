@@ -5,7 +5,8 @@ import AppError from "../utils/AppError.js";
 
 export const authRequire = async (req, res, next) => {
 	const token = req.cookies.auth_token;
-
+	logger.info(`Token is ${token}`);
+	
 	if (!token) {
 		throw new AppError(
 			"Unauthorized",
@@ -34,6 +35,7 @@ export const authRequire = async (req, res, next) => {
 
 export const checkCurrentUser = async (req, res, next) => {
 	const token = req.cookies.auth_token;
+
 	if (!token) {
 		res.locals.user = null;
 		return next();

@@ -49,7 +49,7 @@ app.set("view engine", "ejs");
 app.use(morganMW);
 
 // Rate Limiter Middleware
-app.use(limiter);
+// app.use(limiter);
 
 app.use((req, res, next) => {
 	console.log("Incoming request path:", req.url);

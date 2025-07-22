@@ -1,9 +1,10 @@
 export default (fn) => {
-    return (...args) => {
-        try {
-            return fn(...args);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-};
+    return async (...args) => {
+      try {
+        return await fn(...args);
+      } catch (error) {
+        throw error;
+      }
+    };
+  };
+  

@@ -46,8 +46,14 @@ export default function Events() {
       <div className="py-5 min-h-screen">
         <div className="max-w-7xl mx-auto px-4">
           {loading ? (
-            <div className="flex justify-center items-center py-10">
-              <div className="text-white">Loading events...</div>
+            <div className="text-[#3b82f6] flex justify-center min-h-screen">
+              <div
+                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]"
+                role="status">
+                <span
+                  className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                >Loading...</span>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

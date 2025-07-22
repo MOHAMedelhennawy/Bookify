@@ -1,6 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+import { useAuth } from '../../Context/AuthContext';
+import { useToast } from '../../Context/ToastContext';
+
+import { useBookings } from '../../Context/BookingContext';
 
 export default function EventCard({ event }) {
+  const { user } = useAuth()
+  const { userBookings, addBooking, removeBooking } = useBookings()
+  const { error: showError, success } = useToast();
+  const isBooked = userBookings.includes(event.id);
+  
   const date = new Date(event.date).toLocaleDateString('en-US', {
     year: "numeric",
     month: "short",
@@ -8,6 +18,35 @@ export default function EventCard({ event }) {
   });
 
   const time = new Date(event.date).toLocaleTimeString('en-Us');
+
+  const handleBookNow = async (e) => {
+    if (!user) {
+      showError("You must be logged in to book an event. Please log in or register to continue.");
+    } else {
+
+      if (!isBooked) {
+        const booked = await addBooking(event.id);
+        e.target.style.backgroundColor = 'green';
+  
+        if (booked) {
+          // success("Event saved successfully.");
+        } else {
+          e.target.style.backgroundColor = '#3b82f6';
+          showError("Something went worng, Please try again later.");
+        }
+      } else {
+        const removed = await removeBooking(event.id);
+        e.target.style.backgroundColor = '#3b82f6';
+
+        if (removed) {
+          success("Event removed successfully.");
+        } else {
+          e.target.style.backgroundColor = 'green';
+          showError("Something went worng, Please try again later.");
+        }
+      }
+    }
+  }
 
   return (
     <div className="bg-[#1f2937] rounded-xl shadow-md overflow-hidden flex flex-col border border-[#2d3748]">
@@ -42,7 +81,12 @@ export default function EventCard({ event }) {
         <div className="flex justify-between items-center mt-2">
           {/* <span href={``} className="text-[#3b82f6] ">View Details</span> */}
           <div>
-            <button className='text-white bg-[#3b82f6] py-1 px-2 rounded-lg'>Book Now</button>
+            <button
+              onClick={handleBookNow}
+              className={`text-white ${isBooked ? 'bg-green-700' : 'bg-[#3b82f6]'} py-1 px-2 rounded-lg cursor-pointer`}
+            >
+              Book Now
+            </button>
           </div>
         </div>
       </div>
