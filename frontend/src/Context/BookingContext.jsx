@@ -9,10 +9,9 @@ export default function BookingsProvider({ children }) {
     const { user } = useAuth();
     const [ userBookings, setUserBookings ] = useState([]);
     
-    console.log(userBookings)
     useEffect(() => {
         if (user) {
-            getAllUserBookings()
+            getAllUserBookings(user.id)
                 .then(res => {
                     const bookingIds = res.data.bookings.map(b => b.eventId);
                     setUserBookings(bookingIds);

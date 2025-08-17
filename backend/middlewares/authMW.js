@@ -58,7 +58,6 @@ export const checkUserPrivlages = (req, res, next) => {
 	const user = res?.locals?.user;
 
 	if (!user || user.role !== "ADMIN") {
-		res.redirect("/");
 		throw new AppError(
 			"Forbiden",
 			403,

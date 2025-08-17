@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export const getAllEventsServices = async (queryObject) => {
 	return await handlePrismaQuery(async () => {
-		const count = await prisma.event.count({
+		const count = await prisma.Event.count({
 			where: queryObject.where,
 			orderBy: queryObject.orderBy,
 		});
@@ -50,7 +50,7 @@ export const getEventByIdServices = (id) => {
 
 export const addNewEventServices = (data) => {
 	return handlePrismaQuery(async () => {
-		const newEvent = await prisma.event.create({
+		const newEvent = await prisma.Event.create({
 			data: {
 				title: data.title,
 				description: data.description,

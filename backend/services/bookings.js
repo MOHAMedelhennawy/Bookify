@@ -8,6 +8,13 @@ import { sendBookingConfirmation } from "../config/nodemailer.js";
 const prisma = new PrismaClient();
 const redisKey = (userId) => `user:${userId}:bookings`;
 
+export const getAllBookingsServices = () => {
+	return handlePrismaQuery(async () => {
+		const bookings = await prisma.Booking.findMany();
+		return bookings;
+	});
+};
+
 export const checkExistBooking = (userId, eventId) => {
 	return handlePrismaQuery(async () => {
 		const booking = await prisma.booking.findUnique({
@@ -130,3 +137,29 @@ export const deleteBookingService = (userId, eventId) => {
 		return true;
 	});
 };
+
+export const updateBookingStatusServices = (bookingId, newStatus) => {
+	return handlePrismaQuery(async () => {
+
+		// Find the booking
+		const booking = await prisma.Booking.findUnique({
+			where: { id: bookingId },
+		});
+
+		if (!booking) {
+			throw new AppError(
+				`No booking found with ID: ${bookingId}`,
+				404,
+				"Booking does not exist",
+				true
+			);
+		}
+
+		const updatedBooking = await prisma.Booking.update({
+			where: { id: bookingId },
+			data: { status: newStatus },
+		});
+
+		return updatedBooking;
+	});
+}

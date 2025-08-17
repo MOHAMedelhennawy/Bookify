@@ -1,18 +1,29 @@
 import {
+	getAllBookingsServices,
 	getAllUserBookingServices,
 	addNewBookingServices,
 	deleteBookingService,
 	checkExistBooking,
+	updateBookingStatusServices,
 } from "../services/bookings.js";
 import AppError from "../utils/AppError.js";
 
 import catchAsync from "../utils/catchAsync.js";
 import logger from "../config/logger.js";
 
-export const getAllUserBookingController = catchAsync(async (req, res) => {
-	const user = res.locals.user;
+export const getAllBookingsController = catchAsync(async (req, res) => {
+	const bookings = await getAllBookingsServices();
 
-	if (!user || !user.id) {
+	res.status(200).json({
+		message: "Bookings fetched successfully.",
+		bookings,
+	});
+});
+
+export const getAllUserBookingController = catchAsync(async (req, res) => {
+	const userId = req.params.userId;
+
+	if (!userId) {
 		throw new AppError(
 			"User ID is missing",
 			400,
@@ -21,7 +32,7 @@ export const getAllUserBookingController = catchAsync(async (req, res) => {
 		);
 	}
 
-	const bookings = await getAllUserBookingServices(user.id);
+	const bookings = await getAllUserBookingServices(userId);
 
 	res.status(200).json({
 		message: "User bookings fetched successfully.",
@@ -99,5 +110,45 @@ export const deleteBookingController = catchAsync(async (req, res) => {
 
 	res.status(202).json({
 		message: "Bookgin deleted successfully.",
+	});
+});
+
+export const updateBookingStatusController = catchAsync(async (req, res) => {
+	const { bookingId } = req.params;
+	const { newStatus } = req.body;
+	const validStatuses = ['CONFIRMED', 'CANCELLED', 'PENDING'];
+
+	if (!validStatuses.includes(newStatus)) {
+		throw new AppError(
+			`Invalid status: ${newStatus}`,
+			400,
+			`Status must be one of: ${validStatuses.join(', ')}`,
+			true
+		);
+	}
+
+	if (!bookingId) {
+		throw new AppError(
+			"Booking ID is required",
+			400,
+			"Please provide a valid booking ID",
+			true
+		);
+	}
+
+	if (!newStatus || typeof newStatus !== "string") {
+		throw new AppError(
+			"New status is required and must be a string",
+			400,
+			"Please provide a valid new status",
+			true
+		);
+	}
+
+	const updatedBooking = await updateBookingStatusServices(bookingId, newStatus);
+
+	res.status(200).json({
+		message: "Booking status updated successfully.",
+		updatedBooking,
 	});
 });

@@ -42,8 +42,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static("public"));
-app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
 
 // Morgan Logging Middleware
 app.use(morganMW);
@@ -69,6 +68,8 @@ app.use("/", authRouter);
 app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/images/events", express.static(path.join(__dirname, "public/images/events")));
+
 // eslint-disable-next-line prettier/prettier
 app.get("/", checkCurrentUser, (req, res) => { res.render("home") });
 // eslint-disable-next-line prettier/prettier

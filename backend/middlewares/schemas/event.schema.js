@@ -87,7 +87,6 @@ export const eventSchemaPost = {
 		"description",
 		"venue",
 		"price",
-		"imageUrl",
 	],
 	additionalProperties: false,
 	errorMessage: {
@@ -100,10 +99,7 @@ export const eventSchemaPost = {
 			description: "Description is required.",
 			venue: "Venue is required.",
 			price: "Price is required.",
-			imageUrl: "Image is required",
 		},
-		additionalProperties:
-			"You have included an extra field that is not allowed.",
 	},
 };
 
